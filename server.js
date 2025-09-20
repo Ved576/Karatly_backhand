@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const razorpay = new Razorpay({
+const instance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
@@ -23,12 +23,12 @@ app.post('/create-order', async (req, res) => {
         const { totalCost} = req.body;
 
         const options = {
-            amount: totalCost * 100,
+            amount: Math.round(totalCost * 100),
             currency: 'INR',
             receipt: `receipt_order_${new Date().getTime()}`,
         };
 
-        const order = await razorpayInstance.order.create(options);
+        const order = await instance.order.create(options);
 
 
         if (!order) {
